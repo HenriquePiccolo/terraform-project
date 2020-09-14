@@ -1,6 +1,7 @@
 resource "aws_codepipeline" "codepipeline" {
     name     = "project-app-${terraform.workspace}"
     role_arn = aws_iam_role.codepipeline-role.arn
+    
 
     artifact_store {
         location = aws_s3_bucket.codepipeline_bucket.bucket
