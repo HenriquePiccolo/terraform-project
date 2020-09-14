@@ -6,3 +6,13 @@ variable "aws_region" {
 variable "github_token" {
     type = string
 }
+
+variable "name_repo" {
+    type    = string
+    default = "project-app"
+}
+
+variable "owner_repo" {
+    type    = string
+    default = "HenriquePiccolo"
+}

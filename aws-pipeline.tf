@@ -6,10 +6,10 @@ resource "aws_codepipeline" "codepipeline" {
         location = aws_s3_bucket.codepipeline_bucket.bucket
         type     = "S3"
 
-        #encryption_key {
-        #    id   = data.aws_kms_alias.s3mskey.arn
-        #    type = "KMS"
-        #}
+        encryption_key {
+            id   = aws_kms_alias.s3kmskey.arn
+            type = "KMS"
+        }
     }
 
     stage {
@@ -19,33 +19,32 @@ resource "aws_codepipeline" "codepipeline" {
             category    = "Source"
             owner       = "ThirdParty"
             provider    = "GitHub"
-            version     = 1
+            version     = "1"
             run_order   = 1
-            output_artifacts = ["code"]
+            output_artifacts = ["source_output"]
 
             configuration = {
-                Repo            = "project-app"
-                Owner           = "HenriquePiccolo"
-                Branch          = "master"
+                Owner           = var.owner_repo
+                Repo            = var.name_repo
+                Branch          = "${terraform.workspace}"
                 OAuthToken      = var.github_token
+                PollForSourceChanges = true
             }
         }
     }
 
     stage {
-        name = "Continuos-Integration"
-
+        name = "Build"
         action {
-            name            = "Build-Test"
-            run_order       = 1
-            category        = "Build"
-            owner           = "AWS"
-            provider        = "CodeBuild"
-            version         = 1
-            input_artifacts = ["code"]
-            output_artifacts = ["task"]
-            configuration   = {
-                ProjectName = "codebuild-app"
+            name             = "Build"
+            category         = "Build"
+            owner            = "AWS"
+            provider         = "CodeBuild"
+            input_artifacts  = ["source_output"]
+            output_artifacts = ["build_output"]
+            version          = "1"
+            configuration    = {
+                ProjectName          = "codebuild-app"
                 EnvironmentVariables = jsonencode([
                     {
                         name  = "PROJECT_NAME"
