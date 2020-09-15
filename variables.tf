@@ -26,3 +26,9 @@ variable "bucket_name" {
     type    = string
     default = "project-app-bucket-${terraform.workspace}"
 }
+
+variable "ecr_name"{
+    type    = string
+    default = "project-app"
+}
+}

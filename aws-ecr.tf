@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "ecr" {
-    name = "project-app-${terraform.workspace}"
+    name = var.ecr_name
     image_scanning_configuration {
         scan_on_push = true
     }
