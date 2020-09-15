@@ -1,6 +1,7 @@
 data "aws_iam_policy_document" "codepipeline-role-document"{
     version   = "2012-10-17"
     statement {
+        effect     = "Allow"
         actions    = ["sts:AssumeRole"]
         principals {
             type        = "Service"
@@ -12,6 +13,7 @@ data "aws_iam_policy_document" "codepipeline-role-document"{
 data "aws_iam_policy_document" "codebuild-role-document"{
     version   = "2012-10-17"
     statement {
+        effect     = "Allow"
         actions    = ["sts:AssumeRole"]
         principals {
             type        = "Service"
@@ -37,9 +39,7 @@ data "aws_iam_policy_document" "codepipeline-policy-document" {
     version = "2012-10-17"
     statement {
         effect = "Allow"
-        actions = [
-            "s3:*",
-        ]
+        actions = ["s3:*"]
         resources = [
             "${aws_s3_bucket.codepipeline_bucket.arn}",
             "${aws_s3_bucket.codepipeline_bucket.arn}/*",

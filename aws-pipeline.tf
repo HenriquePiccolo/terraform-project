@@ -6,11 +6,6 @@ resource "aws_codepipeline" "codepipeline" {
     artifact_store {
         location = aws_s3_bucket.codepipeline_bucket.bucket
         type     = "S3"
-
-        encryption_key {
-            id   = aws_kms_alias.s3kmskey.arn
-            type = "KMS"
-        }
     }
 
     stage {
