@@ -18,21 +18,10 @@ resource "aws_codebuild_project" "codebuild-docker" {
             name = "PROJECT_NAME"
             value = var.project_name
         }
-
-        environment_variable {
-            name = "IMAGE_REPO_NAME"
-            value = var.project_name
-        }
-
-        environment_variable {
-            name  = "IMAGE_TAG"
-            value = "latest"
-        }
-
+        
         environment_variable{
-            name = "ECR_ADDRESS"
+            name = "REPOSITORY_URI"
             value = aws_ecr_repository.ecr.repository_url
-
         }
     }
 

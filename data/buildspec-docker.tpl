@@ -7,22 +7,20 @@ phases:
       - PROJ_NAME="$PROJECT_NAME"
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - login=$(aws ecr get-login --no-include-email --region=us-east-1)
+      - login=$(aws ecr get-login --region=us-east-1)
       - login=$(echo $login | sed 's/-e none/ /g' | tee)
       - echo $login | bash
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - IMAGE_URI="$REPOSITORY_URI:$TAG"
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $ECR_ADDRESS/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker build -t "$IMAGE_URI" .
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $ECR_ADDRESS/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push "$IMAGE_URI"
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$PROJ_NAME" "$IMAGE_URI" > imagedefinitions.json
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8 > githash
 artifacts:
   files: 
     - imagedefinitions.json
-    - githash
+    - githash%      
