@@ -25,9 +25,8 @@ data "aws_iam_policy_document" "codebuild-role-document"{
 data "aws_iam_policy_document" "data-ecr-policy"{
     version = "2012-10-17"
     statement {
-        actions = ["ecr:*"]
-        sid     = "AllowAll"
         effect  = "Allow"
+        actions = ["ecr:*"]
         principals {
             type        = "AWS"
             identifiers = ["*"]
@@ -53,6 +52,69 @@ data "aws_iam_policy_document" "codepipeline-policy-document" {
         ]
         resources = ["*"]
     }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ecr:*",
+        ]
+        resources = [
+            "*",
+        ]
+    }
+}
+
+data "aws_iam_policy_document" "codebuild-policy-document" {
+    version = "2012-10-17"
+    statement {
+        effect = "Allow"
+        actions = [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+        ]
+        resources = [
+            "*",
+        ]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ec2:CreateNetworkInterface",
+            "ec2:DescribeDhcpOptions",
+            "ec2:DescribeNetworkInterfaces",
+            "ec2:DeleteNetworkInterface",
+            "ec2:DescribeSubnets",
+            "ec2:DescribeSecurityGroups",
+            "ec2:DescribeVpcs",
+        ]
+        resources = ["*"]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ec2:CreateNetworkInterfacePermission",
+        ]
+        resources = ["*"]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "s3:*",
+        ]
+        resources = [
+            "${aws_s3_bucket.codepipeline_bucket.arn}",
+            "${aws_s3_bucket.codepipeline_bucket.arn}/*",
+        ]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ecr:*",
+        ]
+        resources = [
+            "*",
+        ]
+    }
 }
 
 resource "aws_iam_role" "codepipeline-role" {
@@ -69,4 +131,10 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
 resource "aws_iam_role" "codebuild-role" {
   name               = "codebuild-role"
   assume_role_policy = data.aws_iam_policy_document.codebuild-role-document.json
+}
+
+resource "aws_iam_role_policy" "codebuild-policy" {
+    name    = "codebuild-policy"
+    role    = aws_iam_role.codebuild-role.id
+    policy  = data.aws_iam_policy_document.codebuild-policy-document.json
 }

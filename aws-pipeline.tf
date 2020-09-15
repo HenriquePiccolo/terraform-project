@@ -9,7 +9,7 @@ resource "aws_codepipeline" "codepipeline" {
     }
 
     stage {
-        name        = "Source"
+        name   = "Source"
         action {
             name        = "Source"
             category    = "Source"
@@ -20,17 +20,18 @@ resource "aws_codepipeline" "codepipeline" {
             output_artifacts = ["source_output"]
 
             configuration = {
-                Owner           = var.owner_repo
-                Repo            = var.name_repo
-                Branch          = "${terraform.workspace}"
-                OAuthToken      = var.github_token
+                Owner                = var.owner_repo
+                Repo                 = var.name_repo
+                Branch               = "${terraform.workspace}"
+                OAuthToken           = var.github_token
                 PollForSourceChanges = true
+
             }
         }
     }
 
     stage {
-        name = "Build"
+        name   = "Build"
         action {
             name             = "Build"
             category         = "Build"
@@ -40,19 +41,7 @@ resource "aws_codepipeline" "codepipeline" {
             output_artifacts = ["build_output"]
             version          = "1"
             configuration    = {
-                ProjectName          = "codebuild-app"
-                EnvironmentVariables = jsonencode([
-                    {
-                        name  = "PROJECT_NAME"
-                        type  = "PLAINTEXT"
-                        value = "project-app"
-                    },
-                    {
-                        name  = "ECR_ADDRESS"
-                        type  = "PLAINTEXT"
-                        value = "project-app"
-                    },
-                ])
+                ProjectName  = "codebuild-docker"
             }
         }
     }

@@ -16,3 +16,8 @@ variable "owner_repo" {
     type    = string
     default = "HenriquePiccolo"
 }
+
+variable "project_name"{
+    type    = string
+    default = "project-app"
+}
