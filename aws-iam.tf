@@ -1,3 +1,15 @@
+data "aws_iam_policy_document" "data-ecr-policy"{
+    version = "2012-10-17"
+    statement {
+        effect  = "Allow"
+        actions = ["ecr:*"]
+        principals {
+            type        = "AWS"
+            identifiers = ["*"]
+        }
+    }
+}
+
 data "aws_iam_policy_document" "codepipeline-role-document"{
     version   = "2012-10-17"
     statement {
@@ -22,26 +34,16 @@ data "aws_iam_policy_document" "codebuild-role-document"{
     }
 }
 
-data "aws_iam_policy_document" "data-ecr-policy"{
-    version = "2012-10-17"
-    statement {
-        effect  = "Allow"
-        actions = ["ecr:*"]
-        principals {
-            type        = "AWS"
-            identifiers = ["*"]
-        }
-    }
-}
-
 data "aws_iam_policy_document" "codepipeline-policy-document" {
     version = "2012-10-17"
     statement {
         effect = "Allow"
         actions = ["s3:*"]
         resources = [
-            "${aws_s3_bucket.codepipeline_bucket.arn}",
-            "${aws_s3_bucket.codepipeline_bucket.arn}/*",
+            "${aws_s3_bucket.bucket_app.arn}",
+            "${aws_s3_bucket.bucket_app.arn}/*",
+            "${aws_s3_bucket.bucket_stack.arn}",
+            "${aws_s3_bucket.bucket_stack.arn}/*",
         ]
     }
     statement {
@@ -102,8 +104,10 @@ data "aws_iam_policy_document" "codebuild-policy-document" {
             "s3:*",
         ]
         resources = [
-            "${aws_s3_bucket.codepipeline_bucket.arn}",
-            "${aws_s3_bucket.codepipeline_bucket.arn}/*",
+            "${aws_s3_bucket.bucket_app.arn}",
+            "${aws_s3_bucket.bucket_app.arn}/*",
+            "${aws_s3_bucket.bucket_stack.arn}",
+            "${aws_s3_bucket.bucket_stack.arn}/*",
         ]
     }
     statement {

@@ -12,23 +12,22 @@ variable "name_repo" {
     default = "project-app"
 }
 
+variable "name_repo_stack" {
+    type    = string
+    default = "project-stack"
+}
+
 variable "owner_repo" {
     type    = string
     default = "HenriquePiccolo"
 }
 
-variable "project_name"{
-    type    = string
-    default = "project-app"
-}
-
-variable "bucket_name" {
-    type    = string
-    default = "project-app-bucket-${terraform.workspace}"
-}
-
 variable "ecr_name"{
     type    = string
-    default = "project-app"
+    default = "hackathon-app"
 }
+
+variable "project_name"{
+    type    = string
+    default = "hackathon-app"
 }

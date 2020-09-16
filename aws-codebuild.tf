@@ -9,10 +9,10 @@ resource "aws_codebuild_project" "codebuild-docker" {
     }
 
     environment {
-        compute_type                = "BUILD_GENERAL1_SMALL"
-        image                       = "aws/codebuild/standard:4.0"
-        type                        = "LINUX_CONTAINER"
-        privileged_mode             = true
+        compute_type    = "BUILD_GENERAL1_SMALL"
+        image           = "aws/codebuild/standard:4.0"
+        type            = "LINUX_CONTAINER"
+        privileged_mode = true
 
         environment_variable {
             name = "PROJECT_NAME"
@@ -20,7 +20,7 @@ resource "aws_codebuild_project" "codebuild-docker" {
         }
         
         environment_variable{
-            name = "REPOSITORY_URI"
+            name = "ECR_ADDRESS"
             value = aws_ecr_repository.ecr.repository_url
         }
     }
@@ -29,6 +29,54 @@ resource "aws_codebuild_project" "codebuild-docker" {
     source {
         type        = "CODEPIPELINE"
         buildspec   = data.template_file.buildspec-docker.rendered
+    }
+
+    tags = {
+        Environment = "${terraform.workspace}"
+    }
+}
+
+resource "aws_codebuild_project" "codebuild-stack" {
+    name          = "codebuild-stack"
+    description   = "Codebuilt stack"
+    build_timeout = "25"
+    service_role  = aws_iam_role.codebuild-role.arn
+
+    artifacts {
+        type = "CODEPIPELINE"
+    }
+
+    environment {
+        compute_type    = "BUILD_GENERAL1_SMALL"
+        image           = "aws/codebuild/standard:4.0"
+        type            = "LINUX_CONTAINER"
+        privileged_mode = true
+
+        environment_variable {
+            name = "PROJECT_NAME"
+            value = var.project_name
+        }
+        
+        environment_variable{
+            name = "ECR_ADDRESS"
+            value = aws_ecr_repository.ecr.repository_url
+        }
+
+        environment_variable{
+            name = "STAGE"
+            value = "${terraform.workspace}"
+        }
+
+        environment_variable{
+            name = "BUCKET_NAME"
+            value = aws_s3_bucket.bucket_stack.id
+        }
+    }
+
+    
+    source {
+        type        = "CODEPIPELINE"
+        buildspec   = data.template_file.buildspec-stack.rendered
     }
 
     tags = {
