@@ -6,7 +6,7 @@ resource "aws_ecr_repository" "ecr" {
 }
 
 resource "aws_ecr_repository_policy" "ecr-repository-policy" {
-    repository = var.ecr_name
+    repository = "${var.ecr_name}-${terraform.workspace}"
     policy     = data.aws_iam_policy_document.data-ecr-policy.json
     depends_on = [aws_ecr_repository.ecr]
 }
