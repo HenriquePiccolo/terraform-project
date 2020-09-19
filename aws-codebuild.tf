@@ -1,5 +1,5 @@
 resource "aws_codebuild_project" "codebuild-docker" {
-    name            = "codebuild-docker"
+    name            = "codebuild-docker-${terraform.workspace}"
     description     = "Codebuilt dockerfile docker"
     build_timeout   = "25"
     service_role    = aws_iam_role.codebuild-role.arn
@@ -32,12 +32,12 @@ resource "aws_codebuild_project" "codebuild-docker" {
     }
 
     tags = {
-        Environment = "${terraform.workspace}"
+        Environment = var.environment
     }
 }
 
 resource "aws_codebuild_project" "codebuild-stack" {
-    name          = "codebuild-stack"
+    name          = "codebuild-stack-${terraform.workspace}"
     description   = "Codebuilt stack"
     build_timeout = "25"
     service_role  = aws_iam_role.codebuild-role.arn
@@ -64,7 +64,7 @@ resource "aws_codebuild_project" "codebuild-stack" {
 
         environment_variable{
             name = "STAGE"
-            value = "${terraform.workspace}"
+            value = var.environment
         }
 
         environment_variable{
@@ -80,6 +80,6 @@ resource "aws_codebuild_project" "codebuild-stack" {
     }
 
     tags = {
-        Environment = "${terraform.workspace}"
+        Environment = var.environment
     }
 }

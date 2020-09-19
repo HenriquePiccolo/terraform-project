@@ -19,12 +19,13 @@ phases:
       - echo $login | bash      
   build:
     commands:
+      - echo $STAGE
       - dockerterraform="docker run --rm -w /app  -v $PWD:/app -v $PWD/.aws:/root/.aws -v $PWD/.ssh:/root/.ssh -e PROJ_NAME=$PROJ_NAME $terraformImage"
-      - $dockerterraform init 
+      - $dockerterraform init
       - $dockerterraform workspace select $STAGE || $dockerterraform workspace new $STAGE
-      - $dockerterraform destroy -var ECR_REGISTRY="${REPOSITORY_URI}" -auto-approve
-      - $dockerterraform plan -var ECR_REGISTRY="${REPOSITORY_URI}" -out plan.out
-      - $dockerterraform apply -var ECR_REGISTRY="${REPOSITORY_URI}" -auto-approve
+      - $dockerterraform destroy -var ECR_REGISTRY="$REPOSITORY_URI" -auto-approve
+      - $dockerterraform plan -var ECR_REGISTRY="$REPOSITORY_URI" -out plan.out
+      - $dockerterraform apply -var ECR_REGISTRY="$REPOSITORY_URI" -auto-approve
       - elb=$($dockerterraform output elb_public)
       - echo $elb >> elb.txt
   post_build:
