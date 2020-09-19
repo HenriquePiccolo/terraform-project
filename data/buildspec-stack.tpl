@@ -10,8 +10,8 @@ phases:
       - docker pull $terraformImage
       - PROJ_NAME="$PROJETCT_NAME"
       - REPOSITORY_URI="$ECR_ADDRESS"
-      #- mkdir .aws && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/credentials .aws/ && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/config .aws/
-      #- mkdir .ssh && aws s3 cp s3://$BUCKET_NAME/instance-need/.ssh/fiap-lab.pem .ssh/ 
+      - mkdir .aws && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/credentials .aws/ && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/config .aws/
+      - mkdir .ssh && aws s3 cp s3://$BUCKET_NAME/instance-need/.ssh/fiap-lab.pem .ssh/ 
   pre_build:
     commands:
       - login=$(aws ecr get-login --region=us-east-1)
@@ -19,9 +19,10 @@ phases:
       - echo $login | bash      
   build:
     commands:
+      - echo $STAGE
       - dockerterraform="docker run --rm -w /app  -v $PWD:/app -v $PWD/.aws:/root/.aws -v $PWD/.ssh:/root/.ssh -e PROJ_NAME=$PROJ_NAME $terraformImage"
+      - $dockerterraform init
       - $dockerterraform workspace select $STAGE || $dockerterraform workspace new $STAGE
-      - $dockerterraform init 
       - $dockerterraform destroy -var ECR_REGISTRY="$REPOSITORY_URI" -auto-approve
       - $dockerterraform plan -var ECR_REGISTRY="$REPOSITORY_URI" -out plan.out
       - $dockerterraform apply -var ECR_REGISTRY="$REPOSITORY_URI" -auto-approve

@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "bucket_app" {
 }
 
 resource "aws_s3_bucket" "bucket_stack" {
-    bucket        = "project-stack-bucket-${terraform.workspace}"
+    bucket        = "project-stack-bucket-rm335842"
     acl           = "private"
     force_destroy = true
 }
