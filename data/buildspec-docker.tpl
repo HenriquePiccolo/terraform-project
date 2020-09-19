@@ -11,6 +11,7 @@ phases:
       - login=$(echo $login | sed 's/-e none/ /g' | tee)
       - echo $login | bash
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - REPOSITORY_URI="$ECR_ADDRESS"
       - IMAGE_URI="$REPOSITORY_URI:$TAG"
   build:
     commands:

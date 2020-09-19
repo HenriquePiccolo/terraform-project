@@ -1,6 +1,6 @@
 locals {
-    buildspec-docker = "${path.module}/data/buildspec-docker.tpl"
-    buildspec-stack  = "${path.module}/data/buildspec-stack.tpl"
+    buildspec-docker    = "${path.module}/data/buildspec-docker.tpl"
+    buildspec-stack     = "${path.module}/data/buildspec-stack.tpl"
 }
 
 data "template_file" "buildspec-docker" {

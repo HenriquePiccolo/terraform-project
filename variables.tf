@@ -31,3 +31,7 @@ variable "project_name"{
     type    = string
     default = "hackathon-app"
 }
+
+variable "environment" {
+    type    = string
+}

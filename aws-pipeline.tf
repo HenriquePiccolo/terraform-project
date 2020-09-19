@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "codepipeline" {
-    name     = "hackathon-CI-app"
+    name     = "hackathon-CI-app-${terraform.workspace}"
     role_arn = aws_iam_role.codepipeline-role.arn
     
 
@@ -41,14 +41,14 @@ resource "aws_codepipeline" "codepipeline" {
             output_artifacts = ["build_output"]
             version          = "1"
             configuration    = {
-                ProjectName  = "codebuild-docker"
+                ProjectName  = "codebuild-docker-${terraform.workspace}"
             }
         }
     }
 }
 
 resource  "aws_codepipeline" "codepipeline-stack" {
-    name     = "hackathon-CD-app-stack"
+    name     = "hackathon-CD-app-stack-${terraform.workspace}"
     role_arn = aws_iam_role.codepipeline-role.arn
     
 
@@ -89,7 +89,7 @@ resource  "aws_codepipeline" "codepipeline-stack" {
             output_artifacts = ["build_output"]
             version          = "1"
             configuration    = {
-                ProjectName  = "codebuild-stack"
+                ProjectName  = "codebuild-stack-${terraform.workspace}"
             }
         }
     }
