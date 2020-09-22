@@ -1,13 +1,16 @@
-variable "aws_region" {
+variable "AWS_REGION" {
     description = "The AWS region to create things in."
     default     = "us-east-1"
 }
 
-variable "GITHUB_TOKEN" {
+variable "ACCOUNT" {
+    type    = string
+}
+
+variable "GITHUB_OWNER" {
     type = string
 }
 
-variable "ACCOUNT" {
-    type    = string
-    default = "019290123493"
+variable "GITHUB_TOKEN" {
+    type = string
 }

@@ -4,7 +4,7 @@ module codepipeline-stack {
     ENVIRONMENT  = "${terraform.workspace}"
     TYPE         = "stack"
     PROVIDER     = "GitHub"
-    OWNER        = "HenriquePiccolo"
+    OWNER        = var.GITHUB_OWNER
     GITHUB_TOKEN = var.GITHUB_TOKEN
 }
 
@@ -14,6 +14,6 @@ module codepipeline-app {
     ENVIRONMENT  = "${terraform.workspace}"
     TYPE         = "app"
     PROVIDER     = "GitHub"
-    OWNER        = "HenriquePiccolo"
+    OWNER        = var.GITHUB_OWNER
     GITHUB_TOKEN = var.GITHUB_TOKEN
 }
