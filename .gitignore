@@ -1,6 +1,9 @@
 # Local .terraform directories
-**/.terraform/*
-**/environments/*
+**/src/.terraform/*
+**/old/*
+
+**/src/env.tfvars
+**/src/fiap-lab.pem
 
 # .tfstate files
 *.tfstate

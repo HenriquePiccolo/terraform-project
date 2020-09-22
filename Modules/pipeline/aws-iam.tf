@@ -52,10 +52,8 @@ data "aws_iam_policy_document" "codepipeline-policy-document" {
         effect = "Allow"
         actions = ["s3:*"]
         resources = [
-            "${aws_s3_bucket.bucket_app.arn}",
-            "${aws_s3_bucket.bucket_app.arn}/*",
-            "${aws_s3_bucket.bucket_stack.arn}",
-            "${aws_s3_bucket.bucket_stack.arn}/*",
+            "${aws_s3_bucket.terraform_state_s3.arn}",
+            "${aws_s3_bucket.terraform_state_s3.arn}/*"
         ]
     }
     statement {
@@ -116,10 +114,8 @@ data "aws_iam_policy_document" "codebuild-policy-document" {
             "s3:*",
         ]
         resources = [
-            "${aws_s3_bucket.bucket_app.arn}",
-            "${aws_s3_bucket.bucket_app.arn}/*",
-            "${aws_s3_bucket.bucket_stack.arn}",
-            "${aws_s3_bucket.bucket_stack.arn}/*",
+            "${aws_s3_bucket.terraform_state_s3.arn}",
+            "${aws_s3_bucket.terraform_state_s3.arn}/*"
         ]
     }
     statement {
@@ -133,21 +129,8 @@ data "aws_iam_policy_document" "codebuild-policy-document" {
     }
 }
 
-data "aws_iam_policy_document" "lambda-policy-document" {
-    version = "2012-10-17"
-    statement {
-        effect = "Allow"
-        actions = [
-            "codepipeline:*",
-        ]
-        resources = [
-            "${aws_codepipeline.codepipeline-stack.arn}",
-        ]
-    }
-}
-
 resource "aws_iam_role" "codepipeline-role" {
-    name               = "codepipeline-role"
+    name               = "${var.REPOSITORY}-${var.ENVIRONMENT}-codepipeline-role"
     assume_role_policy = data.aws_iam_policy_document.codepipeline-role-document.json
 }
 
@@ -158,7 +141,7 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
 }
 
 resource "aws_iam_role" "codebuild-role" {
-    name               = "codebuild-role"
+    name               = "${var.REPOSITORY}-${var.ENVIRONMENT}-codebuild-role"
     assume_role_policy = data.aws_iam_policy_document.codebuild-role-document.json
 }
 
@@ -166,15 +149,4 @@ resource "aws_iam_role_policy" "codebuild-policy" {
     name    = "codebuild-policy"
     role    = aws_iam_role.codebuild-role.id
     policy  = data.aws_iam_policy_document.codebuild-policy-document.json
-}
-
-resource "aws_iam_role" "lambda-role" {
-    name               = "lambda-role"
-    assume_role_policy = data.aws_iam_policy_document.lambda-role-document.json
-}
-
-resource "aws_iam_role_policy" "lambda-policy" {
-    name   = "lambda-policy"
-    role   = aws_iam_role.lambda-role.id
-    policy = data.aws_iam_policy_document.lambda-policy-document.json
 }
