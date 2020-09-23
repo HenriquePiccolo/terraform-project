@@ -8,7 +8,7 @@ phases:
       - apt-get install -y jq
       - terraformImage="hashicorp/terraform:0.13.2"
       - docker pull $terraformImage
-      - PROJ_NAME="$PROJETCT_NAME"
+      - PROJ_NAME="$PROJECT_NAME"
       - REPOSITORY_URI="$ECR_ADDRESS"
       - mkdir .aws && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/credentials .aws/ && aws s3 cp s3://$BUCKET_NAME/instance-need/.aws/config .aws/
       - mkdir .ssh && aws s3 cp s3://$BUCKET_NAME/instance-need/.ssh/fiap-lab.pem .ssh/ 
