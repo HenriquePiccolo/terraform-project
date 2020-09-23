@@ -1,5 +1,5 @@
 resource  "aws_codepipeline" "codepipeline" {
-    name     = "${var.REPOSITORY}-${var.ENVIRONMENT}"
+    name     = "${var.GITHUB_REPO}-${var.GITHUB_BRANCH}"
     role_arn = aws_iam_role.codepipeline-role.arn
     
 
@@ -11,18 +11,18 @@ resource  "aws_codepipeline" "codepipeline" {
     stage {
         name   = "Source"
         action {
-            name        = "Source"
-            category    = "Source"
-            owner       = "ThirdParty"
-            provider    = var.PROVIDER
-            version     = "1"
-            run_order   = 1
+            name             = "Source"
+            category         = "Source"
+            owner            = "ThirdParty"
+            provider         = var.PROVIDER
+            version          = "1"
+            run_order        = 1
             output_artifacts = ["source_output"]
 
-            configuration = {
-                Owner                = var.OWNER
-                Repo                 = var.REPOSITORY
-                Branch               = var.ENVIRONMENT
+            configuration    = {
+                Owner                = var.GITHUB_OWNER
+                Repo                 = var.GITHUB_REPO
+                Branch               = var.GITHUB_BRANCH
                 OAuthToken           = var.GITHUB_TOKEN
                 PollForSourceChanges = true
             }
@@ -40,7 +40,7 @@ resource  "aws_codepipeline" "codepipeline" {
             output_artifacts = ["build_output"]
             version          = "1"
             configuration    = {
-                ProjectName  = "codebuild-${var.TYPE}"
+                ProjectName  = "codebuild-${var.TYPE}-${var.GITHUB_BRANCH}"
             }
         }
     }

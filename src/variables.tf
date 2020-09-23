@@ -14,3 +14,7 @@ variable "GITHUB_OWNER" {
 variable "GITHUB_TOKEN" {
     type = string
 }
+
+variable "GITHUB_BRANCH" {
+    type = string
+}

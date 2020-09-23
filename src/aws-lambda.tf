@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "lambda-role-document" {
 }
 
 resource "aws_iam_role" "lambda-role" {
-    name               = "lambda-role"
+    name               = "lambda-role-${terraform.workspace}"
     assume_role_policy = data.aws_iam_policy_document.lambda-role-document.json
 }
 
@@ -33,7 +33,6 @@ resource "aws_iam_role_policy" "lambda-policy" {
     role   = aws_iam_role.lambda-role.id
     policy = data.aws_iam_policy_document.lambda-policy-document.json
 }
-
 
 resource "aws_lambda_function" "lambda-api-pipeline" {
     filename      = "${path.module}/data/handler-${terraform.workspace}.zip"

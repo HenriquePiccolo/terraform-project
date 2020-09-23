@@ -130,7 +130,7 @@ data "aws_iam_policy_document" "codebuild-policy-document" {
 }
 
 resource "aws_iam_role" "codepipeline-role" {
-    name               = "${var.REPOSITORY}-${var.ENVIRONMENT}-codepipeline-role"
+    name               = "${var.GITHUB_REPO}-${var.ENVIRONMENT}-codepipeline-role"
     assume_role_policy = data.aws_iam_policy_document.codepipeline-role-document.json
 }
 
@@ -141,7 +141,7 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
 }
 
 resource "aws_iam_role" "codebuild-role" {
-    name               = "${var.REPOSITORY}-${var.ENVIRONMENT}-codebuild-role"
+    name               = "${var.GITHUB_REPO}-${var.ENVIRONMENT}-codebuild-role"
     assume_role_policy = data.aws_iam_policy_document.codebuild-role-document.json
 }
 

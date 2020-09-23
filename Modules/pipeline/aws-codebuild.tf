@@ -1,6 +1,6 @@
 resource "aws_codebuild_project" "codebuild" {
-    name          = "codebuild-${var.TYPE}"
-    description   = "Codebuild ${var.TYPE}"
+    name          = "codebuild-${var.TYPE}-${var.GITHUB_BRANCH}"
+    description   = "Codebuild ${var.TYPE} ${var.GITHUB_BRANCH}"
     build_timeout = "25"
     service_role  = aws_iam_role.codebuild-role.arn
 
@@ -16,7 +16,7 @@ resource "aws_codebuild_project" "codebuild" {
 
         environment_variable {
             name = "PROJECT_NAME"
-            value = var.REPOSITORY
+            value = var.GITHUB_REPO
         }
         
         environment_variable{
