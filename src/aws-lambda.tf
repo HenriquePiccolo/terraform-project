@@ -38,7 +38,7 @@ resource "aws_lambda_function" "lambda-api-pipeline" {
     filename      = "${path.module}/data/handler-${terraform.workspace}.zip"
     function_name = "lambda-caller-pipeline-${terraform.workspace}"
     role          = aws_iam_role.lambda-role.arn
-    runtime       = "python3.6"
+    runtime       = "python3.8"
     handler       = "handler.main"
 
 }
