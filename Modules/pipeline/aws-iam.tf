@@ -34,17 +34,6 @@ data "aws_iam_policy_document" "codebuild-role-document"{
     }
 }
 
-data "aws_iam_policy_document" "lambda-role-document" {
-    version   = "2012-10-17"
-    statement {
-        effect     = "Allow"
-        actions    = ["sts:AssumeRole"]
-        principals {
-            type        = "Service"
-            identifiers = ["lambda.amazonaws.com"]
-        }
-    }
-}
 
 data "aws_iam_policy_document" "codepipeline-policy-document" {
     version = "2012-10-17"
@@ -149,4 +138,21 @@ resource "aws_iam_role_policy" "codebuild-policy" {
     name    = "codebuild-policy"
     role    = aws_iam_role.codebuild-role.id
     policy  = data.aws_iam_policy_document.codebuild-policy-document.json
+}
+
+data "aws_iam_policy_document" "lambda-role-document"{
+    version   = "2012-10-17"
+    statement {
+        effect     = "Allow"
+        actions    = ["sts:AssumeRole"]
+        principals {
+            type        = "Service"
+            identifiers = ["lambda.amazonaws.com"]
+        }
+    }
+}
+
+resource "aws_iam_role" "lambda-role" {
+  name               = "lambda-role-${var.GITHUB_REPO}-${var.ENVIRONMENT}"
+  assume_role_policy = data.aws_iam_policy_document.lambda-role-document.json
 }
