@@ -1,44 +1,92 @@
-resource "aws_codebuild_project" "codebuild-docker" {
-    name            = "codebuild-docker-${terraform.workspace}"
-    description     = "Codebuilt dockerfile docker"
-    build_timeout   = "25"
-    service_role    = aws_iam_role.codebuild-role.arn
+locals {
+    buildspec-app    = "${path.module}/data/buildspec-app.tpl"
+}
 
-    artifacts {
-        type = "CODEPIPELINE"
-    }
+data "template_file" "buildspec-app" {
+    template = file(local.buildspec-app)
+    vars     = {}
+}
 
-    environment {
-        compute_type    = "BUILD_GENERAL1_SMALL"
-        image           = "aws/codebuild/standard:4.0"
-        type            = "LINUX_CONTAINER"
-        privileged_mode = true
-
-        environment_variable {
-            name = "PROJECT_NAME"
-            value = var.project_name
+data "aws_iam_policy_document" "codebuild-role-document"{
+    version   = "2012-10-17"
+    statement {
+        effect     = "Allow"
+        actions    = ["sts:AssumeRole"]
+        principals {
+            type        = "Service"
+            identifiers = ["codebuild.amazonaws.com"]
         }
-        
-        environment_variable{
-            name = "ECR_ADDRESS"
-            value = aws_ecr_repository.ecr.repository_url
-        }
-    }
-
-    
-    source {
-        type        = "CODEPIPELINE"
-        buildspec   = data.template_file.buildspec-docker.rendered
-    }
-
-    tags = {
-        Environment = var.environment
     }
 }
 
-resource "aws_codebuild_project" "codebuild-stack" {
-    name          = "codebuild-stack-${terraform.workspace}"
-    description   = "Codebuilt stack"
+data "aws_iam_policy_document" "codebuild-policy-document" {
+    version = "2012-10-17"
+    statement {
+        effect = "Allow"
+        actions = [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+        ]
+        resources = [
+            "*",
+        ]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ec2:CreateNetworkInterface",
+            "ec2:DescribeDhcpOptions",
+            "ec2:DescribeNetworkInterfaces",
+            "ec2:DeleteNetworkInterface",
+            "ec2:DescribeSubnets",
+            "ec2:DescribeSecurityGroups",
+            "ec2:DescribeVpcs",
+        ]
+        resources = ["*"]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ec2:CreateNetworkInterfacePermission",
+        ]
+        resources = ["*"]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "s3:*",
+        ]
+        resources = [
+            "${aws_s3_bucket.s3-codepipeline-app.arn}",
+            "${aws_s3_bucket.s3-codepipeline-app.arn}/*"
+        ]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
+            "ecr:*",
+        ]
+        resources = [
+            "*",
+        ]
+    }
+}
+
+resource "aws_iam_role" "codebuild-role" {
+    name               = "codebuild-role"
+    assume_role_policy = data.aws_iam_policy_document.codebuild-role-document.json
+}
+
+resource "aws_iam_role_policy" "codebuild-policy" {
+    name    = "codebuild-policy"
+    role    = aws_iam_role.codebuild-role.id
+    policy  = data.aws_iam_policy_document.codebuild-policy-document.json
+}
+
+resource "aws_codebuild_project" "codebuild" {
+    name          = "hackaton-app"
+    description   = "Codebuild hackaton-app"
     build_timeout = "25"
     service_role  = aws_iam_role.codebuild-role.arn
 
@@ -54,32 +102,17 @@ resource "aws_codebuild_project" "codebuild-stack" {
 
         environment_variable {
             name = "PROJECT_NAME"
-            value = var.project_name
+            value = "Hackaton-project-app"
         }
         
         environment_variable{
             name = "ECR_ADDRESS"
             value = aws_ecr_repository.ecr.repository_url
         }
-
-        environment_variable{
-            name = "STAGE"
-            value = var.environment
-        }
-
-        environment_variable{
-            name = "BUCKET_NAME"
-            value = aws_s3_bucket.bucket_stack.id
-        }
     }
-
     
     source {
         type        = "CODEPIPELINE"
-        buildspec   = data.template_file.buildspec-stack.rendered
-    }
-
-    tags = {
-        Environment = var.environment
+        buildspec   = data.template_file.buildspec-app.rendered
     }
 }

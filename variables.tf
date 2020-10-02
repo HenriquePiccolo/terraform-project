@@ -1,37 +1,24 @@
-variable "aws_region" {
-    description = "The AWS region to create things in."
-    default     = "us-east-1"
+variable "AWS_REGION" {
+  default = "us-east-1"
 }
 
-variable "github_token" {
-    type = string
+variable "GITHUB_OWNER" {
+  type = string
 }
 
-variable "name_repo" {
-    type    = string
-    default = "project-app"
+variable "GITHUB_TOKEN" {
+  type = string
 }
 
-variable "name_repo_stack" {
-    type    = string
-    default = "project-stack"
+variable "GITHUB_BRANCH" {
+  type = string
 }
 
-variable "owner_repo" {
-    type    = string
-    default = "HenriquePiccolo"
+variable "ENVIRONMENT" {
+  type = string
+  default="develop"
 }
 
-variable "ecr_name"{
-    type    = string
-    default = "hackathon-app"
-}
-
-variable "project_name"{
-    type    = string
-    default = "hackathon-app"
-}
-
-variable "environment" {
-    type    = string
+variable "BUCKET" {
+  type = string
 }
