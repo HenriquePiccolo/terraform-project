@@ -16,7 +16,7 @@ variable "GITHUB_BRANCH" {
 
 variable "ENVIRONMENT" {
   type = string
-  default="develop"
+  default="master"
 }
 
 variable "BUCKET" {

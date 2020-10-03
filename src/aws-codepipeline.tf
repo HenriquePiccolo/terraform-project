@@ -53,7 +53,7 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
 
 
 resource  "aws_codepipeline" "codepipeline" {
-    name     = "hackathon-CI-app-${var.ENVIRONMENT}"
+    name     = "hackathon-CI-app"
     role_arn = aws_iam_role.codepipeline-role.arn
     
 

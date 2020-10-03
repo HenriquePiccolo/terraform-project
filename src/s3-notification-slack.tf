@@ -26,11 +26,11 @@ resource "aws_lambda_permission" "allow_bucket" {
 }
 
 resource "aws_lambda_function" "func" {
-  filename      = "${path.module}/data/handler-slack.zip"
-  function_name = "example_lambda_name"
+  filename      = "${path.module}/data/handler.zip"
+  function_name = "hello"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "handler.hello"
-  runtime       = "python3.8"
+  runtime       = "python3.7"
 
   environment {
     variables = {
@@ -45,7 +45,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.func.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "hackaton-CD-app-sta/BuildArtif"
+    filter_prefix       = "hackathon-CI-app/BuildArtif"
     #filter_suffix       = ".log"
   }
 

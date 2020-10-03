@@ -1,5 +1,5 @@
 GITHUB_BRANCH="master"
-GITHUB_TOKEN="7be9da909e671cf1dbeb02ace8c9159007f718e5"
+GITHUB_TOKEN=""
 GITHUB_OWNER="HenriquePiccolo"
 #ENVIRONMENT="${terraform.workspace}"
 BUCKET="codepipeline-app"
