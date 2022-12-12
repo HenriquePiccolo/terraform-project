@@ -1,0 +1,7 @@
+name: terraform
+on:
+  workflow_dispatch:
+
+jobs:
+  plan:
+    uses: HenriquePiccolo/workflows-reusable/.github/workflows/terraform-workflow.yml@main

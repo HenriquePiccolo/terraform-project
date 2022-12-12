@@ -5,16 +5,20 @@ variable "AWS_REGION" {
 
 variable "ACCOUNT" {
     type    = string
+    default = "123456"
 }
 
 variable "GITHUB_OWNER" {
-    type = string
+    type    = string
+    default = "123456"
 }
 
 variable "GITHUB_TOKEN" {
-    type = string
+    type    = string
+    default = "123456"
 }
 
 variable "GITHUB_BRANCH" {
-    type = string
+    type    = string
+    default = "main"
 }
