@@ -1,5 +1,5 @@
 module codepipeline-stack {
-    source        = "../Modules/pipeline/"
+    source        = "./Modules/pipeline/"
     GITHUB_REPO   = "project-stack"
     ENVIRONMENT   = "${terraform.workspace}"
     TYPE          = "stack"
@@ -10,7 +10,7 @@ module codepipeline-stack {
 }
 
 module codepipeline-app {
-    source        = "../Modules/pipeline/"
+    source        = "./Modules/pipeline/"
     GITHUB_REPO   = "project-app"
     ENVIRONMENT   = "${terraform.workspace}"
     TYPE          = "app"

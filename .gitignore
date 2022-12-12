@@ -1,6 +1,6 @@
 # Local .terraform directories
-**/src/.terraform/*
-**/src/.terraform*
+**terraform/*
+**terraform*
 **/old/*
 
 **/src/env.tfvars
