@@ -5,3 +5,5 @@ on:
 jobs:
   plan:
     uses: HenriquePiccolo/workflows-reusable/.github/workflows/terraform-workflow.yml@main
+    with:
+      workdir: src
