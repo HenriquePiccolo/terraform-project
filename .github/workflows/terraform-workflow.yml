@@ -6,5 +6,5 @@ on:
   pull_request:
 
 jobs:
-  plan:
+  terraform:
     uses: HenriquePiccolo/workflows-reusable/.github/workflows/terraform-workflow.yml@main
